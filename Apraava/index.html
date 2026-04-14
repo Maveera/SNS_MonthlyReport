@@ -43,7 +43,7 @@
         <input id="dateRange" type="text" value="01-03-2026 to 31-03-2026" />
       </label>
       <label>Prepared By
-        <input id="preparedBy" type="text" value="SOC Team" />
+        <input id="preparedBy" type="text" value="Maveera" />
       </label>
       <label>Submitted On
         <input id="submittedOn" type="text" value="02-04-2026" />
@@ -212,15 +212,7 @@ Cloud Services,3</textarea>
           <textarea id="inventoryNote" rows="4">Note: In FortiSIEM, the device entry count appears as 88 due to dynamic public IP changes for Azure cloud assets, where each new IP is captured in the CMDB. After removing duplicate entries, the actual device count is 70.</textarea>
         </label>
       </div>
-      <label>Alert Severity CSV (Severity,Count)
-        <textarea id="alertCsv" rows="4">High,24
-Medium,9725
-Low,1276</textarea>
-      </label>
-      <label>TP/FP CSV (Type,High,Medium,Low)
-        <textarea id="tpfpCsv" rows="4">True Positive,6,976,1276
-False Positive,18,8749,0</textarea>
-      </label>
+
 
       <div class="only-apraava" style="border: 2px solid #1e4f9a; padding: 15px; margin-bottom: 20px; border-radius: 8px; background: #f8fbff;">
         <h3 style="margin-top: 0; margin-bottom: 15px; font-size: 16px; color: #1e4f9a;">Potential Incidents and Alert Summary</h3>
@@ -261,14 +253,6 @@ Low,0,0,0</textarea>
           <textarea id="apraavaIncidentsNarrative" rows="4"></textarea>
         </label>
       </div>
-      <label class="only-blupine">Highest EPS events CSV (Device,EventType,EventName,Matched)
-        <textarea id="highestEpsCsv" rows="5">FAZVM64-VIO-CLOUD,FortiGate-traffic-end-forward-denied,Denied forward traffic,63339002
-BEPL-FW-Primary,FortiGate-appctrl-ips-pass,Application control (IPS) (pass),27583901</textarea>
-      </label>
-      <label class="only-blupine">Firewall support tickets (free text or CSV lines)
-        <textarea id="firewallTicketsText" rows="4">Major tickets: Customer Closed 1, Engineer Closed 1
-Minor tickets: Customer Closed 2, Engineer Closed 1</textarea>
-      </label>
       <label>Document revision history (one line per entry)
         <textarea id="documentRevisionHistory" rows="2">Version 1.0 – Initial monthly report for the period.</textarea>
       </label>
@@ -522,36 +506,7 @@ Minor tickets: Customer Closed 2, Engineer Closed 1</textarea>
           </div>
         </section>
 
-        <section class="page only-blupine" data-show="blupine">
-          <h2>Highest EPS Consuming Events For Mentioned Firewalls</h2>
-          <table>
-            <thead>
-              <tr>
-                <th>S.No</th>
-                <th>Reporting Device</th>
-                <th>Event Type</th>
-                <th>Event Name</th>
-                <th>Matched Events</th>
-              </tr>
-            </thead>
-            <tbody id="highestEpsTableBody"></tbody>
-          </table>
-        </section>
 
-        <section class="page only-blupine" data-show="blupine">
-          <h2>Overall Support Ticket Handled By SNS (Firewall Support)</h2>
-          <pre class="pre-block" id="firewallTicketsPreview"></pre>
-        </section>
-
-        <section class="page">
-          <h2>Total Alerts Triggered in FortiSIEM</h2>
-          <canvas id="alertSeverityChart" class="chart"></canvas>
-        </section>
-
-        <section class="page">
-          <h2>True Positive vs False Positive</h2>
-          <canvas id="tpfpChart" class="chart"></canvas>
-        </section>
 
         <section class="page">
           <h2 style="font-size: 28px; font-weight: bold; margin-bottom: 20px; color: #000; font-family: Calibri, 'Segoe UI', Arial, sans-serif;">Response Time SLA</h2>

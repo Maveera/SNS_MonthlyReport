@@ -148,9 +148,23 @@ select {
   font-weight: bold;
 }
 
-.arrow {
-  font-size: 10px;
-  color: #666;
+.resizer {
+  position: absolute;
+  top: 0;
+  right: 0;
+  width: 5px;
+  cursor: col-resize;
+  user-select: none;
+  height: 100%;
+}
+
+.resizer:hover {
+  background: var(--sns-blue);
+  opacity: 0.5;
+}
+
+th {
+  position: relative;
 }
 
 .button-row {
