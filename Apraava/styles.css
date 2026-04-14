@@ -596,6 +596,14 @@ th {
   table {
     page-break-inside: avoid;
   }
+
+  /* Force hide sidebar and its children */
+  .panel, .panel *, aside, aside * {
+    display: none !important;
+    visibility: hidden !important;
+    width: 0 !important;
+    height: 0 !important;
+  }
 }
 /* Apraava QUAD GRID LAYOUT */
 .apraava-page-section {

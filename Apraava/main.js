@@ -31,20 +31,20 @@ const templatePresets = {
   blupine: {
     customerName: "Blupine Energy",
     preparedBy: "Sudhakar",
-    executiveSummary: "It is critical for enterprises to provide a secure environment...\n\nThis Monthly summary report contains the details for Blupine Energy for [MONTH].",
-    documentRevisionHistory: "Version 1.0 – Initial monthly report for the period."
+    reviewedBy: "Kishore Kumar",
+    approvedBy: "Diptesh Saha"
   },
   nocil: {
     customerName: "Nocil Limited",
     preparedBy: "Sudhakar",
-    executiveSummary: "Nocil Limited has engaged with SNS to monitor and review stability...\n\nThis Monthly summary report contains the details for NOCIL for [MONTH].",
-    documentRevisionHistory: "Version 1.0 – Initial monthly report for the period."
+    reviewedBy: "Kishore Kumar",
+    approvedBy: "Diptesh Saha"
   },
   apraava: {
     customerName: "Apraava Energy",
     preparedBy: "Rubesh",
-    executiveSummary: "Apraava Energy has engaged SNS for Advanced Managed Security Services...\n\nThis Monthly summary report contains the detailed analytical results for [MONTH].",
-    documentRevisionHistory: "Version 1.0 – Initial monthly report for the period."
+    reviewedBy: "Kishore Kumar",
+    approvedBy: "Diptesh Saha"
   }
 };
 
@@ -842,7 +842,7 @@ async function exportPptx() {
   }
 
   applyData();
-  // Animation delay to allow Chart.js to finish drawing before capture
+  // Ensure charts have enough time to render before capturing canvases
   await new Promise((r) => setTimeout(r, 600));
 
   const pptx = new Ctor();
@@ -912,24 +912,22 @@ async function exportPptx() {
   addPptxFooter(slide);
   addPptxFooter(slide);
 
-  slide = pptx.addSlide();
-  addPptxTitleBar(slide, "Potential Incidents and Alert Summary");
-  
-  const quadIds = ["aqChart1", "aqChart2", "aqChart3", "aqChart4"];
-  // We can extract images from the Chart.js canvases and position them in 4 quadrants
-  quadIds.forEach((id, idx) => {
-    const cImg = canvasToPptxData(document.getElementById(id));
-    if (cImg) {
-      // Quadrant math: 
-      // x: 0.5 (left) or 5.0 (right)
-      // y: 0.8 (top row) or 3.0 (bot row)
-      const isRight = idx % 2 !== 0;
-      const isBot = Math.floor(idx / 2) > 0;
-      slide.addImage({ data: cImg, x: isRight ? 5.0 : 0.5, y: isBot ? 3.0 : 0.8, w: 4.4, h: 2.0 });
-    }
-  });
-
-  addPptxFooter(slide);
+  if (key === "apraava") {
+    slide = pptx.addSlide();
+    addPptxTitleBar(slide, "Potential Incidents and Alert Summary");
+    
+    const quadIds = ["aqChart1", "aqChart2", "aqChart3", "aqChart4"];
+    // We can extract images from the Chart.js canvases and position them in 4 quadrants
+    quadIds.forEach((id, idx) => {
+      const cImg = canvasToPptxData(document.getElementById(id));
+      if (cImg) {
+        const isRight = idx % 2 !== 0;
+        const isBot = Math.floor(idx / 2) > 0;
+        slide.addImage({ data: cImg, x: isRight ? 5.0 : 0.5, y: isBot ? 3.0 : 0.8, w: 4.4, h: 2.0 });
+      }
+    });
+    addPptxFooter(slide);
+  }
 
 
 
@@ -1448,10 +1446,6 @@ function bindImageInput(inputId, setter) {
   });
 }
 
-document.getElementById("applyBtn").addEventListener("click", applyData);
-document.getElementById("printBtn").addEventListener("click", exportPdf);
-document.getElementById("pptxBtn").addEventListener("click", exportPptx);
-document.getElementById("docxBtn").addEventListener("click", exportDocx);
 function initCustomDropdown() {
   const trigger = document.getElementById("dropdownTrigger");
   const menu = document.getElementById("dropdownMenu");
@@ -1459,6 +1453,8 @@ function initCustomDropdown() {
   const options = document.querySelectorAll(".option");
   const hiddenInput = document.getElementById("templatePreset");
   const selectedSpan = document.getElementById("selectedTemplate");
+
+  if (!trigger || !menu) return;
 
   trigger.addEventListener("click", () => {
     menu.classList.toggle("active");
@@ -1484,13 +1480,10 @@ function initCustomDropdown() {
     opt.addEventListener("click", () => {
       const val = opt.getAttribute("data-value");
       const text = opt.textContent;
-      
       hiddenInput.value = val;
       selectedSpan.textContent = text;
-      
       options.forEach(o => o.classList.remove("selected"));
       opt.classList.add("selected");
-      
       menu.classList.remove("active");
       setPresetData(val);
     });
@@ -1503,16 +1496,33 @@ function initCustomDropdown() {
   });
 }
 
+// Event Listeners initialization
+document.getElementById("applyBtn").addEventListener("click", applyData);
+document.getElementById("printBtn").addEventListener("click", exportPdf);
+document.getElementById("pptxBtn").addEventListener("click", exportPptx);
+document.getElementById("docxBtn").addEventListener("click", exportDocx);
 document.getElementById("pptLayout").addEventListener("change", applyData);
+
 initCustomDropdown();
+
+// Auto-Apply data whenever any input in the panel changes
+document.querySelectorAll(".panel input, .panel textarea, .panel select").forEach(el => {
+  if (el.id !== "dropdownSearchInput") {
+    el.addEventListener("input", applyData);
+  }
+});
+
 bindImageInput("snsLogoInput", (v) => {
   snsLogoDataUrl = v;
+  applyData();
 });
 bindImageInput("clientLogoInput", (v) => {
   clientLogoDataUrl = v;
+  applyData();
 });
 bindImageInput("puzzleLogoInput", (v) => {
   puzzleLogoDataUrl = v;
+  applyData();
 });
 
 const trendCsvInput = document.getElementById("trendCsvFile");
