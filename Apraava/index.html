@@ -1,0 +1,647 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Monthly SOC Report Automation</title>
+  <link rel="stylesheet" href="./styles.css" />
+</head>
+<body>
+  <div class="app-shell">
+    <aside class="panel">
+      <h1>Monthly SOC Report</h1>
+      <p class="muted">Update monthly data and export report.</p>
+      <div class="custom-dropdown" id="templateDropdown">
+        <label>Customer Template</label>
+        <div class="dropdown-trigger" id="dropdownTrigger">
+          <span id="selectedTemplate">Select Template</span>
+          <span class="arrow">▼</span>
+        </div>
+        <div class="dropdown-menu" id="dropdownMenu">
+          <input type="text" class="dropdown-search" placeholder="Search templates..." id="dropdownSearchInput" />
+          <div class="dropdown-options" id="dropdownOptions">
+            <div class="option" data-value="blupine">Blupine</div>
+            <div class="option" data-value="nocil">Nocil</div>
+            <div class="option" data-value="apraava">Apraava</div>
+            <div class="option" data-value="custom">Custom</div>
+          </div>
+        </div>
+        <input type="hidden" id="templatePreset" value="custom" />
+      </div>
+      <label>PPT Slide Size
+        <select id="pptLayout">
+          <option value="LAYOUT_16X9">Widescreen 16:9</option>
+          <option value="LAYOUT_4X3">Standard 4:3</option>
+          <option value="A4">A4 Portrait</option>
+        </select>
+      </label>
+
+      <label>Customer Name
+        <input id="customerName" type="text" value="Blupine Energy" />
+      </label>
+      <label>Report Date Range
+        <input id="dateRange" type="text" value="01-03-2026 to 31-03-2026" />
+      </label>
+      <label>Prepared By
+        <input id="preparedBy" type="text" value="SOC Team" />
+      </label>
+      <label>Submitted On
+        <input id="submittedOn" type="text" value="02-04-2026" />
+      </label>
+      <label>SNS Logo
+        <input id="snsLogoInput" type="file" accept="image/*" />
+      </label>
+      <label>Client Logo
+        <input id="clientLogoInput" type="file" accept="image/*" />
+      </label>
+      <label>Engagement Graphic
+        <input id="puzzleLogoInput" type="file" accept="image/*" />
+      </label>
+
+
+
+      <label>Executive Summary
+        <textarea id="executiveSummary" rows="6">It is critical for enterprises to provide a secure environment that guarantees stakeholders the confidential exchange of information.
+
+In order to perform effective security management, creating visibility is the most important aspect. Our GSOC is a combination of best suited technology platform equipped with industry experts from heterogenous skilled domain driven by global industry standard processes implemented for monitoring, analysis, and response which plays a critical role in assessing the security cycle. By adopting such an approach, organizations can understand their current security posture and use it as a benchmark for improvement.
+
+This Monthly summary report contains the details of Observations, Findings, Remediation's suggested, and the action taken on Information security Incidents occurred during [MONTH].</textarea>
+      </label>
+
+
+      <div style="border: 2px solid #cf9409; padding: 15px; margin-bottom: 20px; border-radius: 8px; background: #fffdf5;">
+        <h3 style="margin-top: 0; margin-bottom: 15px; font-size: 16px; color: #cf9409;">Incident Trend Configuration</h3>
+        <label>Trend CSV (Date,High,Medium)
+          <input type="file" id="trendCsvFile" accept=".csv" />
+          <textarea id="trendCsv" style="display:none;"></textarea>
+        </label>
+        <label>Trend slide Title Note (Bold)
+          <input id="trendNote" type="text" value="" />
+        </label>
+        <label>Trend slide Narrative
+          <textarea id="trendNarrative" rows="4"></textarea>
+        </label>
+      </div>
+
+      <div style="border: 2px solid #be2f2f; padding: 15px; margin-bottom: 20px; border-radius: 8px; background: #fff5f5;">
+        <h3 style="margin-top: 0; margin-bottom: 15px; font-size: 16px; color: #be2f2f;">Potential Incidents Chart Configuration</h3>
+        <label>Incidents CSV (Rule Name,High,Medium)
+          <input type="file" id="potIncidentsCsvFile" accept=".csv" />
+          <textarea id="potIncidentsCsv" style="display:none;"></textarea>
+        </label>
+        <label>Incidents slide Narrative
+          <textarea id="potIncidentsNarrative" rows="4">SNS presents this slide to give Apraava a clear, prioritized view of all potential security incidents detected during the month that comprises of Brute Force Host Login Success, Ransomware detected on a host...</textarea>
+        </label>
+      </div>
+
+      <div style="border: 2px solid #00b050; padding: 15px; margin-bottom: 20px; border-radius: 8px; background: #f0fdf4;">
+        <h3 style="margin-top: 0; margin-bottom: 15px; font-size: 16px; color: #00b050;">EPS Trend Plot Configuration</h3>
+        <p style="font-size: 12px; margin: 0 0 10px 0; font-weight: bold;">Average EPS</p>
+        <div style="display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 10px;">
+           <label>Jan <input type="number" id="epsJan" value="" /></label>
+           <label>Feb <input type="number" id="epsFeb" value="" /></label>
+           <label>Mar <input type="number" id="epsMar" value="" /></label>
+        </div>
+        <br/>
+        <label>EPS Table CSV (S.No,Reporting Device,Event Name,Jan,Feb,Mar)
+          <input type="file" id="epsTableCsvFile" accept=".csv" />
+          <textarea id="epsTableCsv" style="display:none;"></textarea>
+        </label>
+      </div>
+
+      <div style="border: 2px solid #edaf1a; padding: 15px; margin-bottom: 20px; border-radius: 8px; background: #fffcf5;">
+        <h3 style="margin-top: 0; margin-bottom: 15px; font-size: 16px; color: #edaf1a;">Key Points - Overall Summary</h3>
+        <label>1. Report Enhancement
+          <textarea id="kpEnhancement" rows="3">Monthly report enhancements were implemented based on customer feedback to improve clarity and alignment with requirements.</textarea>
+        </label>
+        <label>2. Device Decommissioning
+          <textarea id="kpDecommissioning" rows="5">A total of 6 Oracle-related devices were decommissioned from FortiSIEM:
+•aepldev2db
+•ebsprodapp01.prdapp.clpindia.oraclevcn.com
+•aeplprebsapprd02.apraava.com
+•ebsproddmz01.apraavaddmz.clpindia.oraclevcn.com
+•devdraaplapp01.apraava.com
+•aepldev2app01.ociapppr.clpindia.oraclevcn.com</textarea>
+        </label>
+        <label>3. Rule Implementation
+          <textarea id="kpRuleImplementation" rows="5">New detection rules were implemented to enhance monitoring coverage:
+
+•Windows Devices: 3 rules
+•Microsoft Entra ID: 9 rules
+•CrowdStrike: 2 rules</textarea>
+        </label>
+      </div>
+
+      <div style="border: 2px solid #1e4f9a; padding: 15px; margin-bottom: 20px; border-radius: 8px; background: #f2f7ff;">
+        <h3 style="margin-top: 0; margin-bottom: 15px; font-size: 16px; color: #1e4f9a;">Top 10 Devices Configuration</h3>
+        <label>Top Devices CSV (S.No,Reporting Device,AVG EPS)
+          <input type="file" id="deviceCsvFile" accept=".csv" />
+          <textarea id="deviceCsv" style="display:none;"></textarea>
+        </label>
+      </div>
+
+      <div style="border: 2px solid #555; padding: 15px; margin-bottom: 20px; border-radius: 8px; background: #fafafa;">
+        <h3 style="margin-top: 0; margin-bottom: 15px; font-size: 16px; color: #555;">Potential Incidents - Risks Mitigated</h3>
+        <label>Risks Narrative
+          <textarea id="riskNarrative" rows="4">The below representation translates security alerts into business risk narratives, helping Apraava's leadership understand the real-world impact of each threat, mapping to critical consequences like data breaches, financial losses, operational downtime, and regulatory penalties. This bridges the gap between technical and management teams, ensuring cybersecurity is treated as a business priority and enabling faster, informed decisions to protect Apraava's operations.</textarea>
+        </label>
+        <label>Risks CSV File Upload (Attack Type,Risk Scenario,CIA Triad,Business Impact,Risk Rating)
+          <input type="file" id="riskCsvFile" accept=".csv" />
+        </label>
+        <p style="font-size: 12px; margin: 10px 0 5px;">Edit manually if needed:</p>
+        <textarea id="riskCsv" rows="8">Brute Force Host Login Success,Multiple authentication failures followed by success,Confidentiality,Unauthorized access to systems and sensitive data,High
+Traffic to Malware IP List,Traffic communicating with known malware IPs,Confidentiality,Possible malware infection and data exfiltration,High
+Office365 Brute Force Attempts,Repeated login failures targeting same user,Availability,Potential account compromise and service disruption,Medium</textarea>
+      </div>
+
+      <div style="border: 2px solid #a32222; padding: 15px; margin-bottom: 20px; border-radius: 8px; background: #fafafa;">
+        <h3 style="margin-top: 0; margin-bottom: 15px; font-size: 16px; color: #a32222;">Response & Remediation SLA</h3>
+        
+        <label style="font-weight: bold; margin-bottom: 10px; display: block;">Tickets Count</label>
+        <div style="display: grid; grid-template-columns: repeat(4, 1fr); gap: 5px; text-align: center; font-size: 11px; margin-bottom: 15px;">
+          <div><strong>Severity</strong></div><div><strong>Jan</strong></div><div><strong>Feb</strong></div><div><strong>Mar</strong></div>
+          
+          <div style="text-align: left;">S-1 (High)</div>
+          <div><input type="number" id="slaHighJanCount" style="width: 80%; text-align:center;" value="" /></div>
+          <div><input type="number" id="slaHighFebCount" style="width: 80%; text-align:center;" value="" /></div>
+          <div><input type="number" id="slaHighMarCount" style="width: 80%; text-align:center;" value="" /></div>
+          
+          <div style="text-align: left;">S-2 (Medium)</div>
+          <div><input type="number" id="slaMedJanCount" style="width: 80%; text-align:center;" value="" /></div>
+          <div><input type="number" id="slaMedFebCount" style="width: 80%; text-align:center;" value="" /></div>
+          <div><input type="number" id="slaMedMarCount" style="width: 80%; text-align:center;" value="" /></div>
+          
+          <div style="text-align: left;">S-3 (Low)</div>
+          <div><input type="number" id="slaLowJanCount" style="width: 80%; text-align:center;" value="" /></div>
+          <div><input type="number" id="slaLowFebCount" style="width: 80%; text-align:center;" value="" /></div>
+          <div><input type="number" id="slaLowMarCount" style="width: 80%; text-align:center;" value="" /></div>
+        </div>
+
+        <label style="font-weight: bold; margin-bottom: 10px; display: block;">Remediation Time SLA % (Chart)</label>
+        <div style="display: grid; grid-template-columns: repeat(4, 1fr); gap: 5px; text-align: center; font-size: 11px;">
+          <div><strong>Severity</strong></div><div><strong>Jan %</strong></div><div><strong>Feb %</strong></div><div><strong>Mar %</strong></div>
+          
+          <div style="text-align: left;">S-1 (High)</div>
+          <div><input type="number" id="slaHighJanPct" style="width: 80%; text-align:center;" value=""/></div>
+          <div><input type="number" id="slaHighFebPct" style="width: 80%; text-align:center;" value=""/></div>
+          <div><input type="number" id="slaHighMarPct" style="width: 80%; text-align:center;" value=""/></div>
+          
+          <div style="text-align: left;">S-2 (Medium)</div>
+          <div><input type="number" id="slaMedJanPct" style="width: 80%; text-align:center;" value=""/></div>
+          <div><input type="number" id="slaMedFebPct" style="width: 80%; text-align:center;" value=""/></div>
+          <div><input type="number" id="slaMedMarPct" style="width: 80%; text-align:center;" value=""/></div>
+          
+          <div style="text-align: left;">S-3 (Low)</div>
+          <div><input type="number" id="slaLowJanPct" style="width: 80%; text-align:center;" value=""/></div>
+          <div><input type="number" id="slaLowFebPct" style="width: 80%; text-align:center;" value=""/></div>
+          <div><input type="number" id="slaLowMarPct" style="width: 80%; text-align:center;" value=""/></div>
+        </div>
+      </div>
+
+      <div style="border: 2px solid #00b0ba; padding: 15px; margin-bottom: 20px; border-radius: 8px; background: #fafafa;">
+        <h3 style="margin-top: 0; margin-bottom: 15px; font-size: 16px; color: #00b0ba;">Integrated Device Inventory</h3>
+        <label>Inventory CSV (Device Name,Count)
+          <input type="file" id="inventoryCsvFile" accept=".csv" />
+          <textarea id="inventoryCsv" rows="5">Router & Switch,5
+Firewalls & Z-Scaler,15
+Windows Server,45
+Linux Server,2
+Cloud Services,3</textarea>
+        </label>
+        <label>Inventory Note
+          <textarea id="inventoryNote" rows="4">Note: In FortiSIEM, the device entry count appears as 88 due to dynamic public IP changes for Azure cloud assets, where each new IP is captured in the CMDB. After removing duplicate entries, the actual device count is 70.</textarea>
+        </label>
+      </div>
+      <label>Alert Severity CSV (Severity,Count)
+        <textarea id="alertCsv" rows="4">High,24
+Medium,9725
+Low,1276</textarea>
+      </label>
+      <label>TP/FP CSV (Type,High,Medium,Low)
+        <textarea id="tpfpCsv" rows="4">True Positive,6,976,1276
+False Positive,18,8749,0</textarea>
+      </label>
+
+      <div class="only-apraava" style="border: 2px solid #1e4f9a; padding: 15px; margin-bottom: 20px; border-radius: 8px; background: #f8fbff;">
+        <h3 style="margin-top: 0; margin-bottom: 15px; font-size: 16px; color: #1e4f9a;">Potential Incidents and Alert Summary</h3>
+        
+        <label>Overall Alerts CSV (Jan,Feb,Mar)
+          <textarea id="overallAlertsCsv" rows="4">High,0,0,0
+Medium,0,0,0
+Low,0,0,0</textarea>
+        </label>
+        <label>Overall Alerts Narrative
+          <textarea id="overallAlertsNarrative" rows="4"></textarea>
+        </label>
+        
+        <label>True Positive CSV (Jan,Feb,Mar)
+          <textarea id="truePositiveCsv" rows="4">High,0,0,0
+Medium,0,0,0
+Low,0,0,0</textarea>
+        </label>
+        <label>True Positive Narrative
+          <textarea id="truePositiveNarrative" rows="4"></textarea>
+        </label>
+        
+        <label>False Positive CSV (Jan,Feb,Mar)
+          <textarea id="falsePositiveCsv" rows="4">High,0,0,0
+Medium,0,0,0
+Low,0,0,0</textarea>
+        </label>
+        <label>False Positive Narrative
+          <textarea id="falsePositiveNarrative" rows="4"></textarea>
+        </label>
+        
+        <label>Potential Incidents CSV (Jan,Feb,Mar)
+          <textarea id="apraavaIncidentsCsv" rows="4">High,0,0,0
+Medium,0,0,0
+Low,0,0,0</textarea>
+        </label>
+        <label>Potential Incidents Narrative
+          <textarea id="apraavaIncidentsNarrative" rows="4"></textarea>
+        </label>
+      </div>
+      <label class="only-blupine">Highest EPS events CSV (Device,EventType,EventName,Matched)
+        <textarea id="highestEpsCsv" rows="5">FAZVM64-VIO-CLOUD,FortiGate-traffic-end-forward-denied,Denied forward traffic,63339002
+BEPL-FW-Primary,FortiGate-appctrl-ips-pass,Application control (IPS) (pass),27583901</textarea>
+      </label>
+      <label class="only-blupine">Firewall support tickets (free text or CSV lines)
+        <textarea id="firewallTicketsText" rows="4">Major tickets: Customer Closed 1, Engineer Closed 1
+Minor tickets: Customer Closed 2, Engineer Closed 1</textarea>
+      </label>
+      <label>Document revision history (one line per entry)
+        <textarea id="documentRevisionHistory" rows="2">Version 1.0 – Initial monthly report for the period.</textarea>
+      </label>
+
+      <div class="button-row">
+        <button id="applyBtn" type="button">Apply Data</button>
+        <button id="printBtn" type="button">Export PDF</button>
+        <button id="pptxBtn" type="button">Export PPTX</button>
+        <button id="docxBtn" type="button">Export DOCX</button>
+      </div>
+    </aside>
+
+    <main class="preview-wrap">
+      <article id="reportRoot" class="report">
+        <section class="page cover cover-hero">
+          <div class="cover-top">
+            <img id="snsLogoPreview" class="cover-sns-logo" alt="SNS Logo" />
+          </div>
+          <div class="cover-client-logo-card">
+            <img id="clientLogoPreview" class="cover-client-logo" alt="Client Logo" />
+          </div>
+          <h1 class="cover-main-title">MANAGED INCIDENT RESPONSE &amp;<br />REMEDIATION SERVICE</h1>
+          <p class="cover-subtitle">Monthly SOC Report | <span data-field="month"></span></p>
+          <div class="cover-blue-band"></div>
+        </section>
+
+        <section class="page page-with-footer revision-page">
+          <div class="page-header-right">
+            <img class="nav-sns-logo" alt="SNS Logo" />
+          </div>
+          <h2 class="revision-title">Document Revision History</h2>
+          <table class="revision-table">
+            <tbody>
+              <tr>
+                <td class="fw-bold rev-col-1">Version</td>
+                <td class="fw-bold rev-col-2">1.0</td>
+              </tr>
+              <tr class="row-bg">
+                <td class="rev-col-1">Dated</td>
+                <td class="rev-col-2" data-field="range"></td>
+              </tr>
+              <tr>
+                <td class="rev-col-1">Prepared By</td>
+                <td class="rev-col-2" data-field="preparedBy"></td>
+              </tr>
+              <tr class="row-bg">
+                <td class="rev-col-1">Reviewed By</td>
+                <td class="rev-col-2" data-field="reviewedBy"></td>
+              </tr>
+              <tr>
+                <td class="rev-col-1">Approved By</td>
+                <td class="rev-col-2" data-field="approvedBy"></td>
+              </tr>
+              <tr class="row-bg">
+                <td class="rev-col-1">Submitted On</td>
+                <td class="rev-col-2" data-field="submittedOn"></td>
+              </tr>
+            </tbody>
+          </table>
+          <div class="page-footer-bar"></div>
+        </section>
+
+        <section class="page page-with-footer">
+          <div class="page-header-right">
+            <img class="nav-sns-logo" alt="SNS Logo" />
+          </div>
+          <h2 class="revision-title" style="margin-left: 0; margin-bottom: 20px; font-family: Calibri, 'Segoe UI', Arial, sans-serif; font-size: 38px;">The Engagement</h2>
+          <div class="engagement-container">
+            <div class="engagement-text">
+              <p><span class="fw-bold" data-field="customer"></span> has engaged with SNS to monitor and review the entity's security.</p>
+              <div class="narrative" id="executiveSummaryPreview"></div>
+            </div>
+            <div class="engagement-graphic">
+              <img id="puzzleGraphicPreview" src="" alt="Engagement Puzzle Graphic" style="width: 100%; height: 100%; object-fit: fill; display: none;" />
+              <div class="puzzle-placeholder" id="puzzlePlaceholderLayout">
+                 <img src="final_puzzle.png" alt="Engagement Puzzle Graphic" style="width: 100%; height: 100%; object-fit: fill;" />
+              </div>
+            </div>
+          </div>
+          <div class="page-footer-bar"></div>
+        </section>
+
+        <section class="page apraava-page-section">
+          <h2 style="text-align: center; margin-bottom: 20px; font-weight: bold; font-family: Calibri, 'Segoe UI', Arial, sans-serif; font-size: 38px;">Potential Incidents and Alert Summary</h2>
+          <div class="apraava-quad-grid">
+            
+            <!-- Overall Alerts -->
+            <div class="apraava-quad-col">
+              <div class="aq-box">
+                <h3 class="aq-title">Overall Alerts</h3>
+                <div class="aq-canvas-container">
+                  <canvas id="aqChart1"></canvas>
+                </div>
+                <table class="aq-table" id="aqTable1"></table>
+              </div>
+              <div class="aq-narrative" id="aqNarrative1"></div>
+            </div>
+
+            <!-- True Positives -->
+            <div class="apraava-quad-col">
+              <div class="aq-box">
+                <h3 class="aq-title">True Positive Alerts</h3>
+                <div class="aq-canvas-container">
+                  <canvas id="aqChart2"></canvas>
+                </div>
+                <table class="aq-table" id="aqTable2"></table>
+              </div>
+              <div class="aq-narrative" id="aqNarrative2"></div>
+            </div>
+
+            <!-- False Positives -->
+            <div class="apraava-quad-col">
+              <div class="aq-box">
+                <h3 class="aq-title">False Positive Alerts</h3>
+                <div class="aq-canvas-container">
+                  <canvas id="aqChart3"></canvas>
+                </div>
+                <table class="aq-table" id="aqTable3"></table>
+              </div>
+              <div class="aq-narrative" id="aqNarrative3"></div>
+            </div>
+
+            <!-- Potential Incidents -->
+            <div class="apraava-quad-col">
+              <div class="aq-box">
+                <h3 class="aq-title">Potential Incidents</h3>
+                <div class="aq-canvas-container">
+                  <canvas id="aqChart4"></canvas>
+                </div>
+                <table class="aq-table" id="aqTable4"></table>
+              </div>
+              <div class="aq-narrative" id="aqNarrative4"></div>
+            </div>
+
+          </div>
+        </section>
+
+
+
+        <section class="page">
+          <h2><span data-dynamic="trendTitle">Potential Incident Tickets Trend</span></h2>
+          <div style="border: 1px solid #7f7f7f; padding: 10px; margin-bottom: 20px;">
+            <div style="height: 380px; width: 100%; position: relative;">
+               <canvas id="trendChart"></canvas>
+            </div>
+          </div>
+          <p style="font-weight: bold; font-size: 1.1rem; margin-bottom: 6px; color: #000;" data-field="trendNote"></p>
+          <div class="narrative" id="trendNarrativePreview" style="color: #000; font-size: 1.05rem;"></div>
+        </section>
+
+        <section class="page">
+          <h2>Potential Incidents</h2>
+          <div style="border: 1px solid #7f7f7f; padding: 10px; margin-bottom: 20px;">
+            <div style="height: 380px; width: 100%; position: relative;">
+               <canvas id="potIncidentsChart"></canvas>
+            </div>
+          </div>
+          <div class="narrative" id="potIncidentsNarrativePreview" style="color: #000; font-size: 1.05rem; line-height: 1.4;"></div>
+        </section>
+
+        <section class="page">
+          <h2 style="font-size: 38px; font-weight: bold; margin-bottom: 20px; color: #000; font-family: Calibri, 'Segoe UI', Arial, sans-serif;">EPS Trend Plot</h2>
+          <div style="display: flex; gap: 15px; align-items: flex-start;">
+            <div style="flex: 2; border: 1px solid #7f7f7f; padding: 15px; background: #fff;">
+              <div style="height: 380px; width: 100%; position: relative;">
+                 <canvas id="epsTrendChart"></canvas>
+              </div>
+              <table style="width: 100%; margin-top: 10px; border-collapse: collapse; font-size: 14px; text-align: center;">
+                <thead>
+                   <tr>
+                     <th colspan="2" style="border: 1px solid #7f7f7f; padding: 6px; font-weight: bold; background: #f3f6fb;">AVG EPS</th>
+                   </tr>
+                </thead>
+                <tbody>
+                   <tr>
+                     <td style="border: 1px solid #7f7f7f; padding: 6px; text-align: left; width: 50%;"><span style="display: inline-block; width: 12px; height: 12px; background: #4bc0c0; margin-right: 6px; vertical-align: middle;"></span>Jan</td>
+                     <td style="border: 1px solid #7f7f7f; padding: 6px; width: 50%;" id="epsJanTable"></td>
+                   </tr>
+                   <tr>
+                     <td style="border: 1px solid #7f7f7f; padding: 6px; text-align: left;"><span style="display: inline-block; width: 12px; height: 12px; background: #ffcd56; margin-right: 6px; vertical-align: middle;"></span>Feb</td>
+                     <td style="border: 1px solid #7f7f7f; padding: 6px;" id="epsFebTable"></td>
+                   </tr>
+                   <tr>
+                     <td style="border: 1px solid #7f7f7f; padding: 6px; text-align: left;"><span style="display: inline-block; width: 12px; height: 12px; background: #00b050; margin-right: 6px; vertical-align: middle;"></span>Mar</td>
+                     <td style="border: 1px solid #7f7f7f; padding: 6px;" id="epsMarTable"></td>
+                   </tr>
+                </tbody>
+              </table>
+            </div>
+            <div style="flex: 3;">
+               <table style="width: 100%; border-collapse: collapse; font-size: 11px; text-align: center; border: 1px solid #000;">
+                 <thead style="border: 1px solid #000;">
+                   <tr>
+                     <th rowspan="2" style="border: 1px solid #000; padding: 4px; font-weight: bold;">S.No</th>
+                     <th rowspan="2" style="border: 1px solid #000; padding: 4px; font-weight: bold;">Reporting Device</th>
+                     <th rowspan="2" style="border: 1px solid #000; padding: 4px; font-weight: bold;">Event Name</th>
+                     <th colspan="3" style="border: 1px solid #000; padding: 4px; font-weight: bold;">COUNT(Matched Events)</th>
+                   </tr>
+                   <tr>
+                     <th style="border: 1px solid #000; padding: 4px; font-weight: bold;">Jan</th>
+                     <th style="border: 1px solid #000; padding: 4px; font-weight: bold;">Feb</th>
+                     <th style="border: 1px solid #000; padding: 4px; font-weight: bold;">Mar</th>
+                   </tr>
+                 </thead>
+                 <tbody id="epsTrendTableBody"></tbody>
+               </table>
+            </div>
+          </div>
+        </section>
+
+        <section class="page">
+          <h2 style="font-size: 38px; font-weight: bold; margin-bottom: 20px; color: #000; font-family: Calibri, 'Segoe UI', Arial, sans-serif;">Top 10 Devices Contributing To Highest EPS</h2>
+          <div style="display: flex; gap: 15px; align-items: flex-start;">
+            <div style="flex: 6; border: 1px solid #7f7f7f; padding: 15px; background: #e6e6e6;">
+              <div style="height: 380px; width: 100%; position: relative;">
+                 <canvas id="topEpsChart"></canvas>
+              </div>
+            </div>
+            <div style="flex: 4;">
+               <table style="width: 100%; border-collapse: collapse; font-size: 14px; text-align: center; border: 1px solid #000;">
+                 <thead style="border: 1px solid #000; background: #8eede4;">
+                   <tr>
+                     <th style="border: 1px solid #00b0ba; padding: 8px; font-weight: bold;">S.No</th>
+                     <th style="border: 1px solid #00b0ba; padding: 8px; font-weight: bold;">Reporting Device</th>
+                     <th style="border: 1px solid #00b0ba; padding: 8px; font-weight: bold;">AVG EPS</th>
+                   </tr>
+                 </thead>
+                 <tbody id="deviceTableBody"></tbody>
+               </table>
+            </div>
+          </div>
+        </section>
+
+        <section class="page">
+          <h2>Potential Incidents - Risks Mitigated</h2>
+          <div class="narrative" id="riskNarrativePreview" style="color: #000; font-size: 11px; margin-bottom: 10px;"></div>
+          <div style="overflow-x: auto; width: 100%;">
+            <table style="width: max-content; min-width: 100%; border-collapse: collapse; font-size: 10px; text-align: center; border-bottom: 2px solid #000; border-top: 2px solid #000; table-layout: fixed;">
+              <thead style="background: #e2e5e9; border-bottom: 1px solid #000;">
+                <tr>
+                  <th style="width: 40px; padding: 4px; font-weight: bold;">S.No</th>
+                  <th style="width: 150px; padding: 4px; font-weight: bold; resize: horizontal; overflow: hidden;">Attack Type</th>
+                  <th style="width: 200px; padding: 4px; font-weight: bold; resize: horizontal; overflow: hidden;">Risk Scenario</th>
+                  <th style="width: 100px; padding: 4px; font-weight: bold; resize: horizontal; overflow: hidden;">Type of Risk(s)<br>CIA Triad</th>
+                  <th style="width: 380px; padding: 4px; font-weight: bold; resize: horizontal; overflow: hidden;">Potential Business Impact(s)</th>
+                  <th style="width: 80px; padding: 4px; font-weight: bold;">Risk Rating</th>
+                </tr>
+              </thead>
+              <tbody id="riskTableBody"></tbody>
+            </table>
+          </div>
+        </section>
+
+        <section class="page only-blupine" data-show="blupine">
+          <h2>Highest EPS Consuming Events For Mentioned Firewalls</h2>
+          <table>
+            <thead>
+              <tr>
+                <th>S.No</th>
+                <th>Reporting Device</th>
+                <th>Event Type</th>
+                <th>Event Name</th>
+                <th>Matched Events</th>
+              </tr>
+            </thead>
+            <tbody id="highestEpsTableBody"></tbody>
+          </table>
+        </section>
+
+        <section class="page only-blupine" data-show="blupine">
+          <h2>Overall Support Ticket Handled By SNS (Firewall Support)</h2>
+          <pre class="pre-block" id="firewallTicketsPreview"></pre>
+        </section>
+
+        <section class="page">
+          <h2>Total Alerts Triggered in FortiSIEM</h2>
+          <canvas id="alertSeverityChart" class="chart"></canvas>
+        </section>
+
+        <section class="page">
+          <h2>True Positive vs False Positive</h2>
+          <canvas id="tpfpChart" class="chart"></canvas>
+        </section>
+
+        <section class="page">
+          <h2 style="font-size: 28px; font-weight: bold; margin-bottom: 20px; color: #000; font-family: Calibri, 'Segoe UI', Arial, sans-serif;">Response Time SLA</h2>
+          <table style="width: 100%; border-collapse: collapse; font-size: 11px; text-align: center; border: 2px solid #000; margin-bottom: 20px;">
+            <thead style="border-bottom: 2px solid #000;">
+              <tr>
+                <th style="border: 1px solid #000; padding: 6px; font-weight: bold;">Severity Level</th>
+                <th style="border: 1px solid #000; padding: 6px; font-weight: bold;">SLA Response</th>
+                <th style="border: 1px solid #000; padding: 6px; font-weight: bold;">SLA Resolution</th>
+                <th style="border: 1px solid #000; padding: 6px; font-weight: bold;">Jan</th>
+                <th style="border: 1px solid #000; padding: 6px; font-weight: bold;">Feb</th>
+                <th style="border: 1px solid #000; padding: 6px; font-weight: bold;">Mar</th>
+              </tr>
+            </thead>
+            <tbody id="slaTableBody"></tbody>
+          </table>
+
+          <h2 style="font-size: 28px; font-weight: bold; margin-bottom: 10px; color: #000; font-family: Calibri, 'Segoe UI', Arial, sans-serif;">Remediation Time SLA in %</h2>
+          <div style="height: 350px; width: 100%; border: 1px solid #7f7f7f; padding: 10px; box-sizing: border-box;">
+            <canvas id="slaPctChart"></canvas>
+          </div>
+        </section>
+
+        <section class="page">
+          <h2 style="font-size: 38px; font-weight: bold; margin-bottom: 20px; color: #000; text-align: center; font-family: Calibri, 'Segoe UI', Arial, sans-serif;">Integrated Device Inventory</h2>
+          
+          <div style="margin: 0 auto; width: 85%;">
+            <table style="width: 100%; border-collapse: collapse; font-family: Calibri, 'Segoe UI', Arial, sans-serif; font-size: 16px; text-align: center;">
+              <thead style="background: #4cc0c5; color: #ffffff;">
+                <tr>
+                  <th style="padding: 10px; border: 1px solid #ffffff; width: 15%;">S.NO</th>
+                  <th style="padding: 10px; border: 1px solid #ffffff; width: 60%;">DEVICE NAME</th>
+                  <th style="padding: 10px; border: 1px solid #ffffff; width: 25%;">COUNT</th>
+                </tr>
+              </thead>
+              <tbody id="inventoryTableBody">
+                <!-- Data populated via JS -->
+              </tbody>
+              <tfoot id="inventoryTableFooter">
+                <!-- Total row populated via JS -->
+              </tfoot>
+            </table>
+
+            <div id="inventoryNotePreview" style="margin-top: 25px; font-family: Calibri; font-size: 14px; line-height: 1.4; color: #000; text-align: left;"></div>
+          </div>
+        </section>
+
+        <section class="page">
+          <h2 style="font-size: 38px; font-weight: bold; margin-bottom: 30px; color: #000; text-align: center; font-family: Calibri, 'Segoe UI', Arial, sans-serif;">Key Points - Overall Summary</h2>
+          
+          <div style="margin: 0 auto; width: 85%; font-family: Calibri, 'Segoe UI', Arial, sans-serif; color: #000; font-size: 16px; line-height: 1.5;">
+            <div style="margin-bottom: 25px;">
+              <p style="font-weight: bold; margin-bottom: 5px;">1. Report Enhancement:</p>
+              <div id="kpEnhancementPreview" style="white-space: pre-wrap;"></div>
+            </div>
+
+            <div style="margin-bottom: 25px;">
+              <p style="font-weight: bold; margin-bottom: 5px;">2. Device Decommissioning:</p>
+              <div id="kpDecommissioningPreview" style="white-space: pre-wrap;"></div>
+            </div>
+
+            <div style="margin-bottom: 25px;">
+              <p style="font-weight: bold; margin-bottom: 5px;">3. Rule Implementation:</p>
+              <div id="kpRuleImplementationPreview" style="white-space: pre-wrap;"></div>
+            </div>
+          </div>
+        </section>
+
+        <section class="page last-page" style="padding-top: 60px; font-family: Calibri, 'Segoe UI', Arial, sans-serif; display: block; text-align: left; position: relative; background: #fff;">
+          <div style="margin-left: 20px;">
+            <img class="last-sns-logo" id="lastSnsLogoPreview" alt="SNS Logo" style="max-width: 320px; margin-bottom: 30px; display: block;" />
+            <h1 style="font-size: 64px; font-weight: 800; color: #022a5b; margin: 0 0 20px 0; line-height: 1.1;">Your Trusted Security Advisor</h1>
+            
+            <div style="font-size: 20px; line-height: 1.4; color: #1e4f9a;">
+              <p style="font-weight: bold; margin-bottom: 5px; color: #022a5b;">FOR FURTHER DETAILS:</p>
+              <p style="margin: 0; font-weight: bold; font-size: 24px;">Diptesh Saha</p>
+              <p style="margin: 0;">CISO & Practice Head - Cyber Security & Managed Security</p>
+              <p style="margin: 0;">Contact No. 7338882888</p>
+              <p style="margin: 0;">diptesh.s@snsin.com</p>
+            </div>
+          </div>
+        </section>
+      </article>
+    </main>
+  </div>
+
+  <script src="https://cdn.jsdelivr.net/npm/docx@8.5.0/build/index.iife.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/pptxgenjs@3.12.0/dist/pptxgen.bundle.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/file-saver@2.0.5/dist/FileSaver.min.js"></script>
+  <script src="./main.js"></script>
+</body>
+</html>
