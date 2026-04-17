@@ -1,0 +1,815 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>BluPine Monthly SOC Report Automation</title>
+  <link rel="stylesheet" href="./styles.css" />
+</head>
+<body>
+  <button id="panelToggleBtn" class="panel-toggle-btn" type="button" aria-label="Open edit panel">
+    <span></span>
+    <span></span>
+    <span></span>
+  </button>
+  <div id="panelBackdrop" class="panel-backdrop" aria-hidden="true"></div>
+  <div class="app-shell">
+    <aside class="panel">
+      <h1>Monthly SOC Report</h1>
+      <p class="muted">Update monthly data and export report. <strong>BluPine Energy</strong></p>
+
+      <label>PPT Slide Size
+        <select id="pptLayout">
+          <option value="LAYOUT_16X9">Widescreen 16:9</option>
+          <option value="LAYOUT_4X3">Standard 4:3</option>
+          <option value="A4">A4 Portrait</option>
+        </select>
+      </label>
+
+      <label>Customer Name
+        <input id="customerName" type="text" value="Blupine Energy" />
+      </label>
+      <label>Report Date Range
+        <input id="dateRange" type="text" value="01-03-2026 to 31-03-2026" />
+      </label>
+      <label>Prepared By
+        <input id="preparedBy" type="text" value="Maveera" />
+      </label>
+      <label>Submitted On
+        <input id="submittedOn" type="text" value="02-04-2026" />
+      </label>
+      <label>SNS Logo
+        <input id="snsLogoInput" type="file" accept="image/*" />
+      </label>
+      <label>Client Logo
+        <input id="clientLogoInput" type="file" accept="image/*" />
+      </label>
+      <label>Engagement Graphic
+        <input id="puzzleLogoInput" type="file" accept="image/*" />
+      </label>
+
+      <details class="panel-executive-details">
+        <summary class="panel-executive-summary">Executive summary (same as Page 3 — edit on the slide, or expand here)</summary>
+        <label class="panel-executive-label">
+          Paragraphs for “The Engagement” (use **bold**, [MONTH])
+          <textarea id="executiveSummary" rows="6">It is critical for enterprises to provide a secure environment that guarantees stakeholders the confidential exchange of information.
+
+In order to perform effective security management, creating visibility is the most important aspect. Our GSOC is a combination of best suited technology platform equipped with industry experts from heterogenous skilled domain driven by global industry standard processes implemented for monitoring, analysis, and response which plays a critical role in assessing the security cycle. By adopting such an approach, organizations can understand their current security posture and use it as a benchmark for improvement.
+
+This Monthly summary report contains the details of Observations, Findings, Remediation's suggested, and the action taken on Information security Incidents occurred during [MONTH].</textarea>
+        </label>
+      </details>
+
+      <div class="totpot-panel">
+        <h3 class="totpot-panel-title">Page 4 — Total Potential Incident</h3>
+        <div class="grid-2">
+          <label>High
+            <input id="totPotIncHigh" type="number" min="0" value="14" />
+          </label>
+          <label>Medium
+            <input id="totPotIncMedium" type="number" min="0" value="47" />
+          </label>
+        </div>
+        <label>Narrative (use **text** for bold)
+          <textarea id="totPotIncNarrative" rows="5">Our SOC analysts identified a **suspicious pattern across multiple alerts**, grouped and escalated them as Potential Incidents for deep-dive investigation, and following review with the **BluPine** team, all were confirmed as False Positives and closed</textarea>
+        </label>
+      </div>
+
+      <div class="totpot-panel">
+        <h3 class="totpot-panel-title">Page 5 — Potential Incident Tickets Trend</h3>
+        <label>Trend CSV (Date,High,Medium)
+          <input id="trendCsvFile" type="file" accept=".csv" />
+          <textarea id="trendCsv" style="display:none;">2026-03-01,0,1
+2026-03-02,3,1
+2026-03-03,1,2
+2026-03-04,1,3
+2026-03-05,0,1
+2026-03-06,0,1
+2026-03-07,0,3
+2026-03-08,1,1
+2026-03-09,0,5
+2026-03-10,2,3
+2026-03-11,0,4
+2026-03-12,0,6
+2026-03-13,0,5
+2026-03-14,0,3
+2026-03-15,1,0
+2026-03-16,1,1
+2026-03-17,1,0
+2026-03-18,0,1
+2026-03-19,0,1
+2026-03-20,0,1
+2026-03-21,1,0
+2026-03-22,0,1
+2026-03-23,0,1
+2026-03-24,1,1
+2026-03-25,1,1</textarea>
+        </label>
+        <label>Trend Note (use **text** for bold)
+          <input id="trendNote" type="text" value="**Note: No security impact was observed**" />
+        </label>
+        <label>Trend Narrative
+          <textarea id="trendNarrative" rows="4">The above-mentioned graphs were identified as potential alerts by the SOC analyst. Subsequently, the **Blupine** team confirmed that the activity was legitimate, and the Incidents were determined to be false positives.</textarea>
+        </label>
+      </div>
+
+      <div class="totpot-panel">
+        <h3 class="totpot-panel-title">Next slides — Potential Alerts - Risks Mitigated</h3>
+        <label>Risks Narrative
+          <textarea id="riskNarrative" rows="4">The below representation translates security alerts into business risk narratives, helping Blupine's leadership understand the real-world impact of each threat, mapping to critical consequences like data breaches, financial losses, operational downtime, and regulatory penalties. This bridges the gap between technical and management teams, ensuring cybersecurity is treated as a business priority and enabling faster, informed decisions to protect Blupine's operations.</textarea>
+        </label>
+        <label>Risks CSV (Attack Type,Risk Scenario,CIA Triad,Business Impact,Risk Rating)
+          <input id="riskCsvFile" type="file" accept=".csv" />
+          <textarea id="riskCsv" style="display:none;"></textarea>
+        </label>
+      </div>
+
+      <div class="totpot-panel">
+        <h3 class="totpot-panel-title">Next Slide — Rule-Based Severity Categories</h3>
+        <label>Severity CSV (Rule Name,High,Medium)
+          <input id="ruleSeverityCsvFile" type="file" accept=".csv" />
+          <textarea id="ruleSeverityCsv" style="display:none;"></textarea>
+        </label>
+      </div>
+
+      <div class="totpot-panel">
+        <h3 class="totpot-panel-title">Next Slide — SLA Status</h3>
+        <div class="grid-2">
+          <label>Response Time SLA %
+            <input id="responseSlaPct" type="number" min="0" max="100" value="100" />
+          </label>
+          <label>Remediation Time SLA %
+            <input id="remediationSlaPct" type="number" min="0" max="100" value="100" />
+          </label>
+        </div>
+        <label>Total incident count for summary
+          <input id="slaIncidentCount" type="number" min="0" value="61" />
+        </label>
+        <label>Closed incident count for remediation summary
+          <input id="slaClosedIncidentCount" type="number" min="0" value="61" />
+        </label>
+      </div>
+
+      <div class="totpot-panel">
+        <h3 class="totpot-panel-title">After SLA — Total Alerts Triggered in FortiSIEM</h3>
+        <div class="grid-3">
+          <label>High
+            <input id="fortiAlertHigh" type="number" min="0" value="24" />
+          </label>
+          <label>Medium
+            <input id="fortiAlertMedium" type="number" min="0" value="9725" />
+          </label>
+          <label>Low
+            <input id="fortiAlertLow" type="number" min="0" value="1276" />
+          </label>
+        </div>
+      </div>
+
+      <div class="totpot-panel">
+        <h3 class="totpot-panel-title">Last slide — True &amp; False Positive Alerts</h3>
+        <div class="panel-note-box" role="note">
+          <strong>NOTE</strong>
+          Enter counts in the grid (True row, then False row). For each note text area, start with <code class="panel-note-code">Note:</code> on its own line, then one bullet per line. In the note fields, use placeholders so text stays in sync:
+          <code class="panel-note-code">[MONTH]</code>,
+          <code class="panel-note-code">[TP_H]</code>, <code class="panel-note-code">[TP_M]</code>, <code class="panel-note-code">[TP_L]</code>,
+          <code class="panel-note-code">[FP_H]</code>, <code class="panel-note-code">[FP_M]</code>, <code class="panel-note-code">[FP_L]</code>,
+          <code class="panel-note-code">[FP_TOTAL]</code> (sum of false High+Medium+Low).
+        </div>
+        <div class="tfpos-panel-inputs" aria-label="True and false counts by severity">
+          <div class="grid-3 tfpos-input-row">
+            <label>True — High
+              <input id="tfPosTrueHigh" type="number" min="0" value="55" />
+            </label>
+            <label>True — Medium
+              <input id="tfPosTrueMedium" type="number" min="0" value="976" />
+            </label>
+            <label>True — Low
+              <input id="tfPosTrueLow" type="number" min="0" value="1276" />
+            </label>
+          </div>
+          <div class="grid-3 tfpos-input-row">
+            <label>False — High
+              <input id="tfPosFalseHigh" type="number" min="0" value="107" />
+            </label>
+            <label>False — Medium
+              <input id="tfPosFalseMedium" type="number" min="0" value="8749" />
+            </label>
+            <label>False — Low
+              <input id="tfPosFalseLow" type="number" min="0" value="0" />
+            </label>
+          </div>
+        </div>
+        <label>True Positive note (line 1: <code class="panel-note-code">Note:</code> then one bullet per line; **bold**)
+          <textarea id="tfPosNoteTrue" rows="8">Note:
+During [MONTH], all identified high, medium, and low-severity true-positive alerts were related to performance issues and malicious traffic.
+A total of [TP_H] high, [TP_M] medium, and [TP_L] low-severity alerts related to firewall activity, server installations &amp; server reboot activities were recorded and are being addressed in coordination with the Blupine team.
+All other activities continue to be monitored on an ongoing basis</textarea>
+        </label>
+        <label>False Positive note (same: <code class="panel-note-code">Note:</code> then bullets)
+          <textarea id="tfPosNoteFalse" rows="5">Note:
+For [MONTH], out of a total of [FP_TOTAL] alerts, [FP_M] medium-severity and [FP_H] high-severity alerts were triggered. These activities were confirmed with the customer and validated as legitimate actions performed by the server team.</textarea>
+        </label>
+      </div>
+
+      <div class="totpot-panel">
+        <h3 class="totpot-panel-title">Next Slide — EPS Trend Plot</h3>
+        <div class="grid-2">
+          <label>Total EPS (left chart)
+            <input id="epsTotalValue" type="number" min="0" step="0.01" value="371" />
+          </label>
+          <label>EPS Month Label
+            <input id="epsMonthLabel" type="text" value="March" />
+          </label>
+        </div>
+        <label>Top Hosts CSV (Host,EPS)
+          <textarea id="epsTopHostsCsv" rows="8">FAZVM64-VIO-CLOUD,118
+BEPL-FW-Primary,51.23
+ArcherC64,13.92
+BEPL-SW-CORE,9.09
+HOST-10.244.166.82,6.79
+HOST-10.204.115.63,3.44
+iPhone,3.38
+TEQO-LT-319,3.35
+HOST-192.168.62.100,3.16
+TN-NSTN1-FGT40FTK2309FT9D,3.06</textarea>
+        </label>
+      </div>
+
+      <div class="totpot-panel">
+        <h3 class="totpot-panel-title">Next Slide — Highest EPS Consuming Events</h3>
+        <label>EPS Events CSV (S.No,Reporting Device,Event Type,Event Name,Matched Events)
+          <input id="epsEventsCsvFile" type="file" accept=".csv" />
+          <textarea id="epsEventsCsv" rows="8">1,FAZVM64-VIO-CLOUD,FortiGate-traffic-end-forward-denied,Denied forward traffic,63339002
+2,FAZVM64-VIO-CLOUD,FortiGate-appctrl-ips-pass,Application control (IPS) (pass),33516515
+3,FAZVM64-VIO-CLOUD,FortiGate-traffic-end-forward,Forward traffic,32102710
+4,BEPL-FW-Primary,FortiGate-appctrl-ips-pass,Application control (IPS) (pass),27583901
+5,FAZVM64-VIO-CLOUD,FortiGate-appctrl-ips-block,Application control (IPS) (block),27326332
+6,FAZVM64-VIO-CLOUD,FortiGate-traffic-forward,Forwarded traffic,24182763
+7,FAZVM64-VIO-CLOUD,FortiGate-traffic-denied,Denied traffic,21356195
+8,BEPL-FW-Primary,FortiGate-traffic-end-forward-denied,Denied forward traffic,19756747
+9,FAZVM64-VIO-CLOUD,FortiGate-traffic-end-forward-allowed,Allowed forward traffic,18949501
+10,FAZVM64-VIO-CLOUD,FortiGate-traffic-end-forward-close,FortiGate-traffic-end-forward-close,17245235</textarea>
+        </label>
+      </div>
+
+      <div class="totpot-panel">
+        <h3 class="totpot-panel-title">Next Slide — Overall Support Ticket Handled By SNS (Firewall Support)</h3>
+        <label>Major Tickets CSV (Created by,Closed,In-process)
+          <input id="supportMajorCsvFile" type="file" accept=".csv" />
+          <textarea id="supportMajorCsv" rows="4">Customer,1,0
+Engineer,1,0</textarea>
+        </label>
+        <label>Minor Tickets CSV (Created by,Closed)
+          <input id="supportMinorCsvFile" type="file" accept=".csv" />
+          <textarea id="supportMinorCsv" rows="4">Customer,2
+Engineer,1</textarea>
+        </label>
+      </div>
+
+      <div class="totpot-panel">
+        <h3 class="totpot-panel-title">Next Slide — Integrated Device Inventory</h3>
+        <label>Inventory CSV (Device Name,Count)
+          <input id="inventoryCsvFile" type="file" accept=".csv" />
+          <textarea id="inventoryCsv" rows="8">Router & Switch,13
+Firewalls,31
+Windows Server,424
+Safetica DLP,1
+CloudFlare-1,1
+MS Defender,1
+Cloud Device,1</textarea>
+        </label>
+        <label>Inventory Note
+          <textarea id="inventoryNote" rows="3">The above table represents the devices that are currently in an active state and are under continuous monitoring.</textarea>
+        </label>
+      </div>
+
+      <div class="totpot-panel">
+        <h3 class="totpot-panel-title">Next Slide — Key Points - Overall Summary</h3>
+        <label>Key Points Content (use **bold** and *italic*; one point per line)
+          <textarea id="keyPointsSummary" rows="8">1)  Firewall Hardening - CIS Benchmark
+2)  Rule Fine-Tuning
+
+*Below rules were fine-tuned to improve alert accuracy and reduce noise:*
+▪ Office365: Mailbox SendAs or SendOnBehalf has occurred
+▪ Excessive Denied Connections From Same Src
+▪ Safetica Sensitive Data Sent via Email</textarea>
+        </label>
+      </div>
+
+      <div class="button-row">
+        <button id="printBtn" type="button">Export PDF</button>
+        <button id="pptxBtn" type="button" title="Each slide as an image — matches the preview in the browser">Export PPTX</button>
+        <button id="pptxScreenshotBtn" type="button" title="PowerPoint-native text and shapes; layout may differ from the preview">Export PPTX (editable)</button>
+      </div>
+      <div class="button-row import-row">
+        <input id="pptxImportInput" type="file" accept=".pptx,application/vnd.openxmlformats-officedocument.presentationml.presentation" hidden />
+        <button id="pptxImportBtn" type="button" title="Read text from a deck you edited in PowerPoint and fill the panel">Import PPTX → form</button>
+      </div>
+      <p class="panel-export-hint muted">Edit text in the report preview on the right, or use this panel. <strong>Export PPTX</strong> matches the preview (slides as images). <strong>Export PPTX (editable)</strong> uses real text boxes; layout may not match the preview. After editing the editable PPTX in PowerPoint, use <strong>Import PPTX → form</strong> to sync wording back into the panel and preview.</p>
+
+      <div id="lastImportLog" class="panel-last-import" role="status" aria-live="polite" hidden>
+        <div class="panel-last-import-header">
+          <span class="panel-last-import-title">Last PPTX import</span>
+          <button type="button" id="lastImportLogClear" class="panel-last-import-clear" title="Hide this log">Clear</button>
+        </div>
+        <p id="lastImportLogMeta" class="panel-last-import-meta muted"></p>
+        <ul id="lastImportLogList" class="panel-last-import-list"></ul>
+      </div>
+    </aside>
+
+    <main class="preview-wrap">
+      <article id="reportRoot" class="report">
+
+        <!-- Cover Page -->
+        <section class="page cover cover-hero">
+          <div class="cover-top">
+            <img id="snsLogoPreview" class="cover-sns-logo" alt="SNS Logo" />
+          </div>
+          <div class="cover-client-logo-card">
+            <img id="clientLogoPreview" class="cover-client-logo" alt="Client Logo" />
+          </div>
+          <h1 class="cover-main-title">MANAGED INCIDENT RESPONSE &amp;<br />REMEDIATION SERVICE</h1>
+          <p class="cover-subtitle">Monthly SOC Report | <span data-field="month"></span></p>
+          <div class="cover-blue-band"></div>
+        </section>
+
+        <!-- Document Revision History -->
+        <section class="page page-with-footer revision-page">
+          <div class="page-header-right">
+            <img class="nav-sns-logo" alt="SNS Logo" />
+          </div>
+          <h2 class="revision-title">Document Revision History</h2>
+          <table class="revision-table">
+            <tbody>
+              <tr>
+                <td class="fw-bold rev-col-1">Version</td>
+                <td class="fw-bold rev-col-2">1.0</td>
+              </tr>
+              <tr class="row-bg">
+                <td class="rev-col-1">Dated</td>
+                <td class="rev-col-2" data-field="range"></td>
+              </tr>
+              <tr>
+                <td class="rev-col-1">Prepared By</td>
+                <td class="rev-col-2" data-field="preparedBy"></td>
+              </tr>
+              <tr class="row-bg">
+                <td class="rev-col-1">Reviewed By</td>
+                <td class="rev-col-2" data-field="reviewedBy"></td>
+              </tr>
+              <tr>
+                <td class="rev-col-1">Approved By</td>
+                <td class="rev-col-2" data-field="approvedBy"></td>
+              </tr>
+              <tr class="row-bg">
+                <td class="rev-col-1">Submitted On</td>
+                <td class="rev-col-2" data-field="submittedOn"></td>
+              </tr>
+            </tbody>
+          </table>
+          <div class="page-footer-bar"></div>
+        </section>
+
+        <!-- The Engagement -->
+        <section class="page page-with-footer slide-engagement" id="slideEngagement">
+          <div class="page-header-right">
+            <img class="nav-sns-logo" alt="SNS Logo" />
+          </div>
+          <h2 class="revision-title" style="margin-left: 0; margin-bottom: 20px; font-family: Calibri, 'Segoe UI', Arial, sans-serif; font-size: 38px;">The Engagement</h2>
+          <div class="engagement-container">
+            <div class="engagement-text">
+              <p><span class="fw-bold" data-field="customer"></span> has engaged with SNS to monitor and review the entity's security.</p>
+              <div class="narrative" id="executiveSummaryPreview"></div>
+            </div>
+            <div class="engagement-graphic">
+              <img id="puzzleGraphicPreview" src="" alt="Engagement Puzzle Graphic" style="width: 100%; height: 100%; object-fit: fill; display: none;" />
+              <div class="puzzle-placeholder" id="puzzlePlaceholderLayout">
+                 <img src="./assets/final_puzzle.png" alt="Engagement Puzzle Graphic" />
+              </div>
+            </div>
+          </div>
+          <div class="page-footer-bar"></div>
+        </section>
+
+        <!-- Page 4: Total Potential Incident -->
+        <section class="page page-with-footer slide-total-potential" id="slideTotPotInc">
+          <div class="page-header-right">
+            <img class="nav-sns-logo" alt="SNS Logo" />
+          </div>
+          <h2 class="revision-title totpot-title">Total Potential Incident</h2>
+          <div class="totpot-chart-box">
+            <div class="totpot-banded-block totpot-ss1-frame" id="totPotBandedBlock">
+              <div class="totpot-chart-canvas-wrap">
+                <canvas id="totPotIncChart"></canvas>
+              </div>
+              <div class="totpot-table-legend-wrap">
+                <table class="totpot-data-table" aria-label="Incident counts">
+                  <thead>
+                    <tr>
+                      <th class="totpot-th-empty" scope="col"></th>
+                      <th class="totpot-th-month" scope="col" id="totPotIncTableColHdr">March</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <tr>
+                      <td class="totpot-cell-label"><span class="totpot-sq totpot-sq-high"></span> High</td>
+                      <td class="totpot-cell-val" id="totPotIncTableHigh">14</td>
+                    </tr>
+                    <tr>
+                      <td class="totpot-cell-label"><span class="totpot-sq totpot-sq-med"></span> Medium</td>
+                      <td class="totpot-cell-val" id="totPotIncTableMed">47</td>
+                    </tr>
+                  </tbody>
+                </table>
+              </div>
+            </div>
+          </div>
+          <div class="narrative totpot-narrative" id="totPotIncNarrativePreview"></div>
+          <div class="page-footer-bar"></div>
+        </section>
+
+        <!-- Page 5: Potential Incident Tickets Trend -->
+        <section class="page page-with-footer slide-trend" id="slideTrend">
+          <div class="page-header-right">
+            <img class="nav-sns-logo" alt="SNS Logo" />
+          </div>
+          <h2 class="revision-title trend-title">Potential Incident Tickets Trend</h2>
+          <div class="trend-frame">
+            <div class="trend-canvas-wrap">
+              <canvas id="trendChart"></canvas>
+            </div>
+          </div>
+          <p class="trend-note" id="trendNotePreview"></p>
+          <div class="narrative trend-narrative" id="trendNarrativePreview"></div>
+          <p class="trend-followup">Incident details are provided below.</p>
+          <div class="page-footer-bar"></div>
+        </section>
+
+        <div id="riskSlidesContainer"></div>
+
+        <section class="page page-with-footer slide-rule-severity" id="slideRuleSeverity">
+          <div class="page-header-right">
+            <img class="nav-sns-logo" alt="SNS Logo" />
+          </div>
+          <h2 class="revision-title rule-severity-title">Rule-Based Severity Categories For Potential Incidents</h2>
+          <div class="rule-severity-frame">
+            <div class="rule-severity-canvas-wrap">
+              <canvas id="ruleSeverityChart"></canvas>
+            </div>
+          </div>
+          <div class="page-footer-bar"></div>
+        </section>
+
+        <section class="page page-with-footer slide-sla-status" id="slideSlaStatus">
+          <div class="page-header-right">
+            <img class="nav-sns-logo" alt="SNS Logo" />
+          </div>
+          <div class="sla-layout">
+            <div class="sla-left">
+              <h3 class="sla-block-title">Response Time SLA</h3>
+              <div class="sla-pie-frame">
+                <canvas id="responseSlaChart"></canvas>
+                <p class="sla-legend-text" id="responseSlaLegend"></p>
+              </div>
+              <h3 class="sla-block-title">Remediation Time SLA</h3>
+              <div class="sla-pie-frame">
+                <canvas id="remediationSlaChart"></canvas>
+                <p class="sla-legend-text" id="remediationSlaLegend"></p>
+              </div>
+            </div>
+            <div class="sla-right">
+              <table class="sla-table">
+                <thead>
+                  <tr>
+                    <th>Severity Level Description</th>
+                    <th>Severity Level</th>
+                    <th>Response</th>
+                    <th>Resolution/Remediation</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr>
+                    <td>High Severity ticket resulted in extremely serious interruptions to Business system. It has affected the user community</td>
+                    <td>S-1</td>
+                    <td>&le;15 Minutes</td>
+                    <td>4 Hours</td>
+                  </tr>
+                  <tr>
+                    <td>Medium Severity ticket resulted in interruptions normal operations. It does not prevent Business Operations or minor ticket</td>
+                    <td>S-2</td>
+                    <td>&le;15 Minutes</td>
+                    <td>8 Hours</td>
+                  </tr>
+                  <tr>
+                    <td>Low Severity A Request/Query/Service that does not change existing service structure and no cost implication</td>
+                    <td>S-3</td>
+                    <td>&le;30 Minutes</td>
+                    <td>24 Hours</td>
+                  </tr>
+                </tbody>
+              </table>
+              <p class="sla-summary" id="responseSlaSummary"></p>
+              <table class="sla-table">
+                <thead>
+                  <tr>
+                    <th>Severity Level Description</th>
+                    <th>Severity Level</th>
+                    <th>Resolution/Remediation</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr>
+                    <td>High Severity ticket resulted in extremely serious interruptions to Business system. It has affected the user community</td>
+                    <td>High</td>
+                    <td>4 Hours</td>
+                  </tr>
+                  <tr>
+                    <td>Medium Severity ticket resulted in interruptions normal operations. It does not prevent Business Operations or minor ticket</td>
+                    <td>Medium</td>
+                    <td>8 Hours</td>
+                  </tr>
+                  <tr>
+                    <td>Low A Request/Query/Service that does not change existing service structure and no cost implication</td>
+                    <td>Low</td>
+                    <td>24 Hours</td>
+                  </tr>
+                </tbody>
+              </table>
+              <p class="sla-summary" id="remediationSlaSummary"></p>
+            </div>
+          </div>
+          <div class="page-footer-bar"></div>
+        </section>
+
+        <!-- After SLA: Total Alerts Triggered in FortiSIEM (not the final slide) -->
+        <section class="page page-with-footer slide-fortisiem-alerts" id="slideFortiSiemAlerts">
+          <div class="page-header-right">
+            <img class="nav-sns-logo" alt="SNS Logo" />
+          </div>
+          <h2 class="revision-title fortisiem-title">Total Alerts Triggered in FortiSIEM</h2>
+          <div class="fortisiem-chart-box">
+            <div class="totpot-banded-block totpot-ss1-frame" id="fortiSiemBandedBlock">
+              <div class="fortisiem-chart-canvas-wrap">
+                <canvas id="fortiSiemAlertsChart"></canvas>
+              </div>
+              <div class="totpot-table-legend-wrap">
+                <table class="totpot-data-table" aria-label="FortiSIEM alert counts by severity">
+                  <thead>
+                    <tr>
+                      <th class="totpot-th-empty" scope="col"></th>
+                      <th class="totpot-th-month" scope="col" id="fortiSiemTableColHdr">March</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <tr>
+                      <td class="totpot-cell-label"><span class="totpot-sq totpot-sq-high"></span> High</td>
+                      <td class="totpot-cell-val" id="fortiSiemTableHigh">24</td>
+                    </tr>
+                    <tr>
+                      <td class="totpot-cell-label"><span class="totpot-sq totpot-sq-med"></span> Medium</td>
+                      <td class="totpot-cell-val" id="fortiSiemTableMed">9725</td>
+                    </tr>
+                    <tr>
+                      <td class="totpot-cell-label"><span class="totpot-sq totpot-sq-low"></span> Low</td>
+                      <td class="totpot-cell-val" id="fortiSiemTableLow">1276</td>
+                    </tr>
+                  </tbody>
+                </table>
+              </div>
+            </div>
+          </div>
+          <div class="page-footer-bar"></div>
+        </section>
+
+        <!-- Last slide: True & False Positive Alerts -->
+        <section class="page page-with-footer slide-tfpos-alerts" id="slideTfPosAlerts">
+          <div class="page-header-right">
+            <img class="nav-sns-logo" alt="SNS Logo" />
+          </div>
+          <h2 class="revision-title tfpos-main-title">Total Number Of True &amp; False Positive Alerts</h2>
+          <div class="tfpos-grid">
+            <div class="tfpos-col">
+              <h3 class="tfpos-subtitle">True Positive Alerts based on Severity</h3>
+              <div class="totpot-ss1-frame tfpos-frame-inner">
+                <div class="tfpos-chart-wrap">
+                  <canvas id="truePositiveAlertsChart"></canvas>
+                </div>
+                <div class="totpot-table-legend-wrap">
+                  <table class="totpot-data-table" aria-label="True positive counts">
+                    <thead>
+                      <tr>
+                        <th class="totpot-th-empty" scope="col"></th>
+                        <th class="totpot-th-month" scope="col" id="tfPosTrueTableColHdr">March</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      <tr>
+                        <td class="totpot-cell-label"><span class="totpot-sq totpot-sq-high"></span> High</td>
+                        <td class="totpot-cell-val" id="tfPosTrueTableHigh">55</td>
+                      </tr>
+                      <tr>
+                        <td class="totpot-cell-label"><span class="totpot-sq totpot-sq-med"></span> Medium</td>
+                        <td class="totpot-cell-val" id="tfPosTrueTableMed">976</td>
+                      </tr>
+                      <tr>
+                        <td class="totpot-cell-label"><span class="totpot-sq totpot-sq-low"></span> Low</td>
+                        <td class="totpot-cell-val" id="tfPosTrueTableLow">1276</td>
+                      </tr>
+                    </tbody>
+                  </table>
+                </div>
+              </div>
+              <div class="tfpos-note-block narrative" id="tfPosNoteTruePreview"></div>
+            </div>
+            <div class="tfpos-col">
+              <h3 class="tfpos-subtitle">False Positive Alerts based on Severity</h3>
+              <div class="totpot-ss1-frame tfpos-frame-inner">
+                <div class="tfpos-chart-wrap">
+                  <canvas id="falsePositiveAlertsChart"></canvas>
+                </div>
+                <div class="totpot-table-legend-wrap">
+                  <table class="totpot-data-table" aria-label="False positive counts">
+                    <thead>
+                      <tr>
+                        <th class="totpot-th-empty" scope="col"></th>
+                        <th class="totpot-th-month" scope="col" id="tfPosFalseTableColHdr">March</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      <tr>
+                        <td class="totpot-cell-label"><span class="totpot-sq totpot-sq-high"></span> High</td>
+                        <td class="totpot-cell-val" id="tfPosFalseTableHigh">107</td>
+                      </tr>
+                      <tr>
+                        <td class="totpot-cell-label"><span class="totpot-sq totpot-sq-med"></span> Medium</td>
+                        <td class="totpot-cell-val" id="tfPosFalseTableMed">8749</td>
+                      </tr>
+                      <tr>
+                        <td class="totpot-cell-label"><span class="totpot-sq totpot-sq-low"></span> Low</td>
+                        <td class="totpot-cell-val" id="tfPosFalseTableLow">0</td>
+                      </tr>
+                    </tbody>
+                  </table>
+                </div>
+              </div>
+              <div class="tfpos-note-block narrative" id="tfPosNoteFalsePreview"></div>
+            </div>
+          </div>
+          <div class="page-footer-bar"></div>
+        </section>
+
+        <section class="page page-with-footer slide-eps-trend-plot" id="slideEpsTrendPlot">
+          <div class="page-header-right">
+            <img class="nav-sns-logo" alt="SNS Logo" />
+          </div>
+          <h2 class="revision-title eps-main-title">EPS Trend Plot</h2>
+          <div class="eps-grid">
+            <div class="eps-left-card">
+              <div class="totpot-ss1-frame">
+                <div class="eps-left-chart-wrap">
+                  <canvas id="epsTotalChart"></canvas>
+                </div>
+                <table class="totpot-data-table" aria-label="EPS total by month">
+                  <tbody>
+                    <tr>
+                      <td class="totpot-cell-label"><span class="totpot-sq totpot-sq-eps"></span><span id="epsTotalMonthLabelCell">March</span></td>
+                      <td class="totpot-cell-val" id="epsTotalValueCell">371</td>
+                    </tr>
+                  </tbody>
+                </table>
+              </div>
+            </div>
+            <div class="eps-right-card">
+              <div class="totpot-ss1-frame eps-right-frame">
+                <div class="eps-right-chart-wrap">
+                  <canvas id="epsTopHostsChart"></canvas>
+                </div>
+                <div class="eps-hosts-legend" id="epsHostsLegend"></div>
+              </div>
+            </div>
+          </div>
+          <div class="page-footer-bar"></div>
+        </section>
+
+        <section class="page page-with-footer slide-eps-events" id="slideEpsEvents">
+          <div class="page-header-right">
+            <img class="nav-sns-logo" alt="SNS Logo" />
+          </div>
+          <h2 class="revision-title eps-events-title">Highest EPS Consuming Events For Mentioned Firewalls</h2>
+          <div class="eps-events-wrap">
+            <table class="eps-events-table" aria-label="Highest EPS consuming events table">
+              <thead>
+                <tr>
+                  <th class="eps-col-sno">S.No</th>
+                  <th class="eps-col-device">Reporting Device</th>
+                  <th class="eps-col-type">Event Type</th>
+                  <th class="eps-col-name">Event Name</th>
+                  <th class="eps-col-count">Matched Events</th>
+                </tr>
+              </thead>
+              <tbody id="epsEventsTableBody"></tbody>
+            </table>
+          </div>
+          <div class="page-footer-bar"></div>
+        </section>
+
+        <section class="page page-with-footer slide-support-tickets" id="slideSupportTickets">
+          <div class="page-header-right">
+            <img class="nav-sns-logo" alt="SNS Logo" />
+          </div>
+          <h2 class="revision-title support-main-title">Overall Support Ticket Handled By SNS (Firewall Support)</h2>
+          <div class="support-grid">
+            <div class="support-card">
+              <table class="support-table">
+                <thead>
+                  <tr><th colspan="4" class="support-band">Major tickets</th></tr>
+                  <tr>
+                    <th rowspan="2">Created by</th>
+                    <th colspan="2">Status</th>
+                    <th rowspan="2">Grand Total</th>
+                  </tr>
+                  <tr>
+                    <th>Closed</th>
+                    <th>In-process</th>
+                  </tr>
+                </thead>
+                <tbody id="supportMajorBody"></tbody>
+              </table>
+            </div>
+            <div class="support-card">
+              <table class="support-table">
+                <thead>
+                  <tr><th colspan="2" class="support-band">Minor tickets</th></tr>
+                  <tr>
+                    <th rowspan="2">Created by</th>
+                    <th>Status</th>
+                  </tr>
+                  <tr>
+                    <th>Closed</th>
+                  </tr>
+                </thead>
+                <tbody id="supportMinorBody"></tbody>
+              </table>
+            </div>
+          </div>
+          <div class="page-footer-bar"></div>
+        </section>
+
+        <section class="page page-with-footer slide-integrated-inventory" id="slideIntegratedInventory">
+          <div class="page-header-right">
+            <img class="nav-sns-logo" alt="SNS Logo" />
+          </div>
+          <h2 class="revision-title inventory-main-title">Integrated Device Inventory</h2>
+          <div class="inventory-wrap">
+            <table class="inventory-table" aria-label="Integrated Device Inventory table">
+              <thead>
+                <tr>
+                  <th class="inv-col-sno">S.NO</th>
+                  <th class="inv-col-device">DEVICE NAME</th>
+                  <th class="inv-col-count">COUNT</th>
+                </tr>
+              </thead>
+              <tbody id="inventoryTableBody"></tbody>
+              <tfoot id="inventoryTableFoot"></tfoot>
+            </table>
+          </div>
+          <div class="inventory-note" id="inventoryNotePreview"></div>
+          <div class="page-footer-bar"></div>
+        </section>
+
+        <section class="page page-with-footer slide-key-points-summary" id="slideKeyPointsSummary">
+          <div class="page-header-right">
+            <img class="nav-sns-logo" alt="SNS Logo" />
+          </div>
+          <h2 class="revision-title keypoints-main-title">Key Points - Overall Summary</h2>
+          <div class="keypoints-content" id="keyPointsSummaryPreview"></div>
+          <div class="page-footer-bar"></div>
+        </section>
+
+        <section class="page page-with-footer slide-contact-summary" id="slideContactSummary">
+          <div class="contact-wrap">
+            <img id="contactSnsLogoPreview" class="contact-sns-logo" alt="SNS Logo" />
+            <h2 class="contact-title">Your Trusted Security Advisor</h2>
+            <div class="contact-details">
+              <p class="contact-head">FOR FURTHER DETAILS:</p>
+              <p><strong>Diptesh Saha</strong></p>
+              <p><strong>CISO &amp; Practice Head - Cyber Security &amp; Managed Security</strong></p>
+              <p><strong>Contact No. 7338882888</strong></p>
+              <p><strong>diptesh.s@snsin.com</strong></p>
+            </div>
+          </div>
+          <div class="page-footer-bar"></div>
+        </section>
+
+      </article>
+    </main>
+  </div>
+
+  <script src="https://cdn.jsdelivr.net/npm/chart.js@3.9.1/dist/chart.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/chartjs-plugin-datalabels@2.2.0/dist/chartjs-plugin-datalabels.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/html2canvas@1.4.1/dist/html2canvas.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/jszip@3.10.1/dist/jszip.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/pptxgenjs@3.12.0/dist/pptxgen.bundle.js"></script>
+  <script src="./main.js"></script>
+</body>
+</html>
